@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>每日一信</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .card-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2%;
+            padding: 20px 3%;
+            background: #d2cbed;
+            perspective: 1000px;
+            flex-wrap: nowrap; /* 强制3张同行，不换行 */
+        }
+        .card {
+            width: 30%; /* 3张均分宽度，适配所有屏幕 */
+            aspect-ratio: 3/4; /* 固定宽高比，手机/电脑形状一致 */
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            border-radius: 10px;
+        }
+        /* 翻转状态+翻后取消手型，提示不可点击 */
+        .card.flipped {
+            transform: rotateY(180deg);
+            cursor: default;
+        }
+        /* 卡片正反通用样式 */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #786082;
+            font-weight: bold;
+            font-size: 3.5vw; /* 文字自适应屏幕 */
+            padding: 10px;
+            text-align: center;
+            font-family: "SimSun"  ;
+        }
+        /* 每张卡片正面独立配色（可自定义） */
+        .card1-front {background: #b098b0;} /* 运气卡-蓝色 */
+        .card2-front {background: #b098b0;} /* 健康卡-绿色 */
+        .card3-front {background: #b098b0;} /* 幸运色卡-红色 */
+        /* 背面统一深色，适配所有文字 */
+        .card-back {
+            background: #b8a5c2;
+            transform: rotateY(180deg);
+            font-size: 2.8vw; /* 背面文字稍小，避免溢出 */
+            line-height: 1.4; /* 行间距，适配多文字 */
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <!-- 卡片1：Ta的便签 - 正面固定文字 -->
+        <div class="card flip-card" data-card="luck">
+            <div class="card-front card1-front">今日心声<br>查询</div>
+            <div class="card-back"></div>
+        </div>
+        <!-- 卡片2：健康卡 - 正面固定文字 -->
+        <div class="card flip-card" data-card="health">
+            <div class="card-front card2-front">今日状态<br>查询</div>
+            <div class="card-back"></div>
+        </div>
+        <!-- 卡片3：幸运色卡 - 正面固定文字 -->
+        <div class="card flip-card" data-card="color">
+            <div class="card-front card3-front">今日行为<br>查询</div>
+            <div class="card-back"></div>
+        </div>
+    </div>
+
+    <script>
+        // 核心：每张卡片单独配置专属文字库，一一对应
+        const cardTextLibs = {
+            // 卡片1：便签专属文字库
+            luck: [
+                "我又在想你了",
+                "想见你",
+                "我会向你迈出101步",
+                "我好想你",
+                "不要再难过了",
+                "花开了，我想和你一起看",
+                "想你了就默念你的名字，也许风会传达我的思念",
+                "你的眼里都是我，我的也是",
+                "该怎么开口呢？是先问在吗，还是直接说我好想你",
+                "在你之前，我一无所有",
+                "刚刚走神想到你了",
+                "我的爱人今天有好好生活吗？",
+                "每当你哭泣，我的世界就会下一场暴雨",
+                "好想抱抱你",
+                "以前总说要一直在一起，现在我只想你幸福",
+                "你那边天气好不好，一直幸福好不好",
+                "幸福请降临在我爱人的手心",
+                "如果可以，我想你一直爱我。如果不可以，我想你一直幸福",
+                "你好像太阳，就算不见面，你在我就感到温暖",
+                "遇见你后，我开始相信童话",
+                "我所有的支付密码都知道你的生日",
+                "每次联系不上你都感觉自己鼻子红红的",
+                "我吃醋了...",
+                "下辈子换我来梦你吧...不对！下辈子要一直牵着手",
+                "遇见你后，我相信神明的存在",
+                "路上开得正旺的花是你，自由的鸟是你，照耀着我的太阳也是你。",
+                "理理我.....",
+                "你的掌纹里是否也有我的一席之地",
+                "今天格外想亲吻你的脸颊",
+                "爱真的是一件很没道理的事",
+                "凭什么风比我先轻抚你的脸颊，我可以索要补偿吗",
+                "算了，说出来你会不会嫌我小气",
+                "你是不是天生就拥有让我献出一切的能力",
+                "比起你一直爱我，我更想你一直幸福。然后再爱我，然后再爱我多一点",
+                "你的笑颜是我的良药",
+                "我的宝宝是世界上最好的人！",
+                "情字何解？",
+                "我的心也在下雨",
+                "在我眼里你还是个小朋友，你可以随意耍性子。",
+                "笑一笑吧，我痴迷你的笑容",
+                "我拥有太阳",
+                "我好像完全被你驯化了",
+                "我的爱人不讲理的时候也很可爱",
+                "昨晚我梦到你了，我好开心",
+                "不要为不值得的人和事掉眼泪了",
+                "你知道你跟我说话的时候眉眼弯弯吗，那是我午夜梦回一遍遍描摹的模样，我好想你"
+
+
+            ],
+            // 卡片2：健康专属文字库
+            health: [
+                "精力充沛",
+                "身体安康",
+                "稍有疲惫",
+                "略感风寒",
+                "疲惫不适",
+                "牵肠挂肚",
+                "忧思过重",
+                "梦魇缠身",
+                "触景生情",
+                "劳逸结合",
+                "养精蓄锐",
+                "忙里偷闲",
+                "从容处事",
+                "略感焦躁",
+                "身心舒缓"
+            ],
+            // 卡片3：幸运色专属文字库
+            color: [
+                "玩手机中",
+                "偷偷想你",
+                "看你照片",
+                "工作中",
+                "正在网购",
+                "吃饭中",
+                "在看书",
+                "整理房间",
+                "开车中",
+                "走神",
+                "写日记",
+                "努力健身",
+                "网抑云中",
+                "看你发的朋友圈",
+                "想念你"
+            ]
+        };
+
+        // 随机取文字工具函数：从指定文字库抽一个
+        function getRandomText(lib) {
+            const randomIndex = Math.floor(Math.random() * lib.length);
+            return lib[randomIndex];
+        }
+
+        // 绑定点击事件：识别卡片类型→取对应文字库→赋值+翻转+锁定
+        const allCards = document.querySelectorAll('.flip-card');
+        allCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // 未翻转时才触发，翻后锁定
+                if (!card.classList.contains('flipped')) {
+                    // 获取卡片自定义属性，判断是哪张卡（运气/健康/幸运色）
+                    const cardType = card.dataset.card;
+                    // 取当前卡片的专属文字库
+                    const currentLib = cardTextLibs[cardType];
+                    // 给当前卡片背面赋值随机文字
+                    const cardBack = card.querySelector('.card-back');
+                    cardBack.innerHTML = getRandomText(currentLib);
+                    // 翻转并锁定（仅添加一次，不可翻回）
+                    card.classList.add('flipped');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
