@@ -10,10 +10,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-    <body>
-  <div class="phone-border"></div> <!-- 只加这1行，单独放，别和其他代码连一起 -->
-  </div>
-</body>
         .card-container {
             width: 100%;
             min-height: 100vh;
@@ -70,30 +66,6 @@
             font-size: 2.8vw; /* 背面文字稍小，避免溢出 */
             line-height: 1.4; /* 行间距，适配多文字 */
         }
-                /* 手机适配深紫边框：上下宽20px 左右细2px，贴合页面不形变 */
-.phone-border {
-  position: fixed; /* 固定贴合屏幕，手机端滚动也不跑 */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-top: 50px solid #4A148C; /* 深紫上下宽边 */
-  border-bottom: 50px solid #4A148C;
-  border-left: 20px solid #4A148C; /* 深紫左右细边 */
-  border-right: 20px solid #4A148C;
-  box-sizing: border-box; /* 边框算在自身尺寸，不撑大页面 */
-  z-index: 9999; /* 边框置顶，绝对不被遮挡 */
-  pointer-events: none; /* 不影响手机端点击/滑动交互 */
-  margin: 0;
-  padding: 0;
-}
-/* 手机端小屏适配：防止边框挤内容，原有卡片自动适配 */
-@media (max-width: 768px) {
-  .phone-border {
-    border-top: 15px solid #4A148C; /* 手机端上下边框稍窄，更协调 */
-    border-bottom: 15px solid #4A148C;
-  }
-}
     </style>
 </head>
 <body>
@@ -234,6 +206,7 @@
     </script>
 </body>
 </html>
+
 
 
 
