@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>每日一信</title>
+    <body>
+  <div class="phone-border"></div> <!-- 只加这1行，单独放，别和其他代码连一起 -->
+  </div>
+</body>
     <style>
         * {
             margin: 0;
@@ -21,6 +25,13 @@
             background: #d2cbed;
             perspective: 1000px;
             flex-wrap: nowrap; /* 强制3张同行，不换行 */
+             /*新增*/
+            border-top: 60px solid #786082;
+            border-bottom: 60px solid #786082;
+            border-left: 10px solid #786082;
+            border-right: 10px solid #786082;
+            border-radius: 4px;
+            padding: 8px;
         }
         .card {
             width: 30%; /* 3张均分宽度，适配所有屏幕 */
@@ -206,6 +217,7 @@
     </script>
 </body>
 </html>
+
 
 
 
